@@ -1,0 +1,88 @@
+<!--header-->
+{include file="public/_meta" title="娱乐资讯"/}
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 资讯管理 <span class="c-gray en">&gt;</span> 资讯列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+  <div class="text-c">
+    <form action="{:url('news/index')}" method="post">
+	 <span class="select-box inline">
+		<select name="catid" class="select">
+          <option value="0">全部分类</option>
+          <option value="1">体育</option>
+          <option value="2">娱乐</option>
+          <option value="3">军事</option>
+        </select>
+		</span> 日期范围：
+      <input type="text" name="start_time" class="input-text" id="countTimestart" onfocus="selecttime(1)" value="" style="width:120px;" >
+      -
+      <input type="text" name="end_time" class="input-text" id="countTimestart" onfocus="selecttime(1)" value=""  style="width:120px;">
+
+      <input type="text" name="title" id="" value="" placeholder=" 资讯名称" style="width:250px" class="input-text">
+      <button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜资讯</button>
+    </form>
+  </div>
+
+  <div class="mt-20">
+    <table class="table table-border table-bordered table-bg table-hover table-sort table-responsive" >
+      <thead>
+      <tr class="text-c">
+        <th width="25"><input type="checkbox" name="" value=""></th>
+        <th width="80">ID</th>
+        <th>标题</th>
+        <th width="80">分类</th>
+        <th width="80">缩图</th>
+        <th width="120">更新时间</th>
+        <th width="40">是否推荐</th>
+        <th width="60">发布状态</th>
+        <th width="120">操作</th>
+      </tr>
+      </thead>
+      <tbody>
+        {volist name="news" id="vo"}
+        <tr class="text-c">
+          <th width="25"><input type="checkbox" name="" value=""></th>
+
+          <td>{$vo.id}</td>
+            <td>{$vo.title}</td>
+            <td>{$vo.catid}</td>
+            <td><img src="{$vo.image}" style="width: 100%;"></td>
+            <td>{$vo.update_time}</td>
+            <td>{$vo.is_position}</td>
+            <td>{$vo.status}</td>
+            <td></td>
+        </tr>
+        {/volist}
+      </tbody>
+    </table>
+  </div>
+  {:pagination($news)}
+</div>
+<!--header-->
+{include file="public/_footer" /}
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__STATIC__/hadmin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="__STATIC__/hadmin/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+  var url = '{:url("news/index")}';
+  //alert(url);
+  laypage({
+    cont: 'laypage', //容器。值支持id名、原生dom对象，jquery对象,
+    pages: '', //总页数
+    skin: '#5FB878', //皮肤
+    curr :'',
+    jump: function(e, first){ //触发分页后的回调
+      if(!first){ //一定要加此判断，否则初始时会无限刷新
+        //alert(url+'?page='+e.curr);
+//        location.href = url+'&page='+e.curr;
+      }
+    }
+  });
+
+</script>
+<style>
+  .imooc-app .pagination li{display:inline; padding-left:10px;}
+  .pagination .active{color:red}
+  .pagination .disabled{color:#888888}
+</style>
+</body>
+</html>
