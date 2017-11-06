@@ -29,20 +29,17 @@ class IAuth
         $signStr = (new Aes())->decrypt($data['sign']);
 
 //        dump($signStr); exit();
+
         //将字符串转换为数组
         parse_str($signStr, $arr);
 
-//        dump($arr); exit();
         //用did判断是否合法(只有did(设备号)是唯一)
         if (!is_array($arr) || empty($arr['did']) || $arr['did'] != $data['did']) {
-
             return false;
-
         }
 
         //时间戳验证,如果当前时间大于验证的时间加上10分钟,则过时
         if(time() > ceil($arr['time'] / 1000) +config('app.app_sign_time')){
-
             return false;
         }
 
@@ -61,17 +58,17 @@ class IAuth
     {
 
         //加密算法
-        //1.排序
+       //1.排序
         ksort($data);
 
         //2.拼接
-        $str = http_build_query($data);
+        $aesStr = http_build_query($data);
 
-        //3.aes加密
-        $aesStr = (new Aes())->encrypt($str);
+        //加密
+        $aesStr = (new Aes())->encrypt($aesStr);
+
         return $aesStr;
 
     }
-
 
 }

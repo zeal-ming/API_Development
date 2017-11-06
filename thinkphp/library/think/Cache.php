@@ -33,6 +33,7 @@ class Cache
      * @param bool|string   $name 缓存连接标识 true 强制重新连接
      * @return Driver
      */
+
     public static function connect(array $options = [], $name = false)
     {
         $type = !empty($options['type']) ? $options['type'] : 'File';

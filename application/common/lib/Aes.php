@@ -78,8 +78,6 @@ class Aes {
 
     }
 
-
-
     /**
      * 填充方式 pkcs5
      * @param String text 		 原始字符串

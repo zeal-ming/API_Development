@@ -8,11 +8,11 @@
 
 namespace app\admin\controller;
 
-//use think\Controller;
-
 class Index extends Base {
 
     public function index(){
+
+        $res = $this->updateAll();
 
         return $this->fetch();
     }
@@ -30,5 +30,15 @@ class Index extends Base {
         $email = '943910611@qq.com';
 
         \phpMailer\Email::send($email,$title,$message);
+    }
+
+    //批量更新测试
+    public function updateAll(){
+
+        $data = [
+            ['id' => 1, 'status'=>0],
+            ['id' => 2, 'status'  => 0]
+        ];
+        return model('News')->saveAll($data);
     }
 }

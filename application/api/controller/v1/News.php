@@ -42,7 +42,7 @@ class News extends Base {
 
     }
 
-    //点击某个文章时,返回所有的数据
+    //点击某个文章时,返回详情
     public function read(){
 
         $id = input('id','0','intval');

@@ -17,17 +17,23 @@ Route::resource('test','api/test');
 
 //Route::rule('test','api/test/show','POST');
 
-Route::resource('Train','api/Train');
+//Route::resource('Train','api/Train');
 
-
-Route::get('time','api/time/index');
-Route::get('check', 'api/base/checkSign');
-
-//针对API的版本升级
+//Route::get('time','api/time/index');
+//Route::get('check', 'api/base/checkSign');
+////Route::get('search','api/news/getNewsByCatNames');
+//
+////针对API的版本升级
 Route::resource(':ver/category','api/:ver.category');
+//Route::resource(':ver/index','api/:ver.index');
+Route::resource(':ver/news','api/:ver.news');
 
-Route::resource('news','api/news');
+//Route::resource('version','api/base');
 
+Route::get('version', 'api/base/checkVersion');
 
+Route::get('saveActiveUser','api/base/saveActiveUser');
 
+Route::post('sendMessage','api/test/sendMessage');
 
+Route::post('VerifyMessage','api/test/VerifyMessage');

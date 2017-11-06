@@ -93,8 +93,8 @@ class News extends Controller{
     public function add(){
 
         if(request()->isPost()){
+
             $data  = input('post.');
-            dump($data);
 
             //数据验证...
             //数据入库
@@ -110,4 +110,5 @@ class News extends Controller{
             return $this->fetch();
         }
     }
+
 }

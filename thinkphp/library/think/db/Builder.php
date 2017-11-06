@@ -711,6 +711,7 @@ abstract class Builder
     public function insert(array $data, $options = [], $replace = false)
     {
         // 分析并处理数据
+
         $data = $this->parseData($data, $options);
         if (empty($data)) {
             return 0;

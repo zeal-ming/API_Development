@@ -17,12 +17,10 @@ class Base extends Controller{
 
     public function _initialize()
     {
-        $this->testSign();
+//        $this->testSign();
 //        dump(time());
-
+        //每次进来之前先验证签名
 //        $this->checkAuthorize();
-
-
     }
 
     /*
@@ -31,13 +29,8 @@ class Base extends Controller{
     public function checkAuthorize()
     {
 
-//        dump(show('1','可以访问',[],200));
-//        exit();
-
         //获取请求头数据
         $header = request()->header();
-
-//        dump($header);exit();
 
         //api文档规定 请求头必须带 app_type参数,并且值为iOS或Android
         //基础参数的校验
@@ -54,7 +47,6 @@ class Base extends Controller{
         //设置sign字符串的缓存
         Cache::set($header['sign'],1, config('app.app_sign_cache_time'));
 
-
         dump('可以访问');
 
     }
@@ -65,14 +57,12 @@ class Base extends Controller{
     public function testSign(){
 
         $time = microtime();  //获取时间
-//        dump($time);
 
         //explore分割字符串
         list($t1, $t2) = explode(' ',$time);
 
         $time = $t2.ceil($t1 * 1000);
 
-//        dump($time); exit();
         $data = [
             'app_type' => 'ios',
             'version' => 1,
@@ -84,4 +74,77 @@ class Base extends Controller{
         exit();
     }
 
+    /*
+     *通过catid,获取catname并返回
+     */
+    public function addCateName($data){
+
+        $catIds = model('Category')->all();
+
+        $cat_arr = [];
+        foreach ($catIds as $val){
+            $cat_arr[$val->id] = $val->name;
+        }
+        //得到数组['id'=>catname]
+
+
+        foreach ($data as $val){
+
+            $val['catname'] = $cat_arr[$val['catid']];
+
+        }
+
+        return $data;
+    }
+
+    /*
+     * 版本验证
+     */
+    public function checkVersion(){
+
+        $header = request()->header();
+
+        //从库中查找,看看与最新版本是否一致
+        $data = model('Version')->getNewVersion($header['app_type'])[0];
+
+        if($data['version_code'] == $header['version']){
+
+            $data['is_update'] = [
+                0 => '不更新',
+            ];
+
+            return show(1,'success','当前已是最新版本',500);
+        }
+
+        if($data['is_force'] == 1){
+            $data['is_update'] = [
+                2 => '强制更新',
+            ];
+        }
+
+        $data['is_update'] = [
+            1 => '更新',
+        ];
+
+        return show(1,'success',$data,500);
+
+    }
+
+    /*
+     * 记录用户的登录信息
+     */
+    public function saveActiveUser(){
+
+        $header = request()->header();
+
+        $data = [
+            'version' => $header['version'],
+            'app_type' => $header['app_type'],
+            'did' => $header['did']
+        ];
+
+
+         model('ActiveUser')->allowField(true)->save($data);
+
+    }
 }

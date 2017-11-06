@@ -14,21 +14,8 @@ class Category extends Controller{
 
     public function index(){
 
-        $data = [
-            [
-                'catId' => 1,
-                'catName' => '综艺'
-            ],
-            [
-                'catId' => 2,
-                'catName' => '体育'
-            ],
-            [
-                'catId' => 3,
-                'catName' => '新闻'
-            ]
-        ];
 
-        return show('1','success',$data,'500');
     }
+
+
 }
