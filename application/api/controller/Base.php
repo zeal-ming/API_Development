@@ -15,6 +15,8 @@ use think\Controller;
 
 class Base extends Controller{
 
+    public $header;
+
     public function _initialize()
     {
 //        $this->testSign();
@@ -31,6 +33,8 @@ class Base extends Controller{
 
         //获取请求头数据
         $header = request()->header();
+
+        $this->header = $header;
 
         //api文档规定 请求头必须带 app_type参数,并且值为iOS或Android
         //基础参数的校验
@@ -127,7 +131,6 @@ class Base extends Controller{
         ];
 
         return show(1,'success',$data,500);
-
     }
 
     /*

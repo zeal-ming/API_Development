@@ -9,6 +9,7 @@
 namespace app\api\controller;
 
 use aliyun\apiDemo\SmsDemo;
+use app\common\lib\Aliyun;
 use app\common\lib\Jpush;
 use app\common\lib\Message;
 use think\Cache;
@@ -57,8 +58,9 @@ class Test extends Base {
 
         if(request()->isPost()){
 
-            $res = Message::check('15004116517');
+//            $res = Message::check('15004116517');
 
+            $res = Aliyun::getInstance()->sentSms('15004116517');
             if($res === true){
                 return show(1,'sss','成功',200);
             }

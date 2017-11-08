@@ -10,6 +10,7 @@ class Aes {
 
     private $key = null;
 
+
     /**
      *
      * @param $key 		密钥

@@ -71,4 +71,23 @@ class IAuth
 
     }
 
+    /*
+     * token
+     */
+
+    public static function setAppAccessToken($phone){
+
+        //生成唯一字符串
+        //microtime(true)生成当前微妙时间的浮点数
+        //使用MD5加密微妙数
+        //使用unique生成唯一ID,第二个参数为true,让ID更具唯一性
+        //用md5加密唯一ID
+        $token  = md5(uniqid(md5(microtime(true),true)));
+
+        //拼接手机号,使用sha1加密
+        $token = sha1($token.$phone);
+
+        return $token;
+    }
+
 }
