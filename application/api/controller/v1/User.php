@@ -10,7 +10,8 @@ namespace app\api\controller\v1;
 
 use app\api\controller\Common;
 use app\common\lib\Aes;
-use think\Cache;
+use app\common\lib\ApiException;
+
 use think\Exception;
 use think\Log;
 use think\Validate;
@@ -20,7 +21,7 @@ class User extends Common {
     //验证用户是否登录
 
     //返回用户信息,为了安全得加密
-    public function index(){
+    public function save(){
 
         $result = [
             'user' => (new Aes())->encrypt($this->user)
@@ -30,12 +31,15 @@ class User extends Common {
     }
 
     //设置用户信息
-    public function save(){
+    public function update(){
 
-        if(!request()->isPost()){
+        if(!request()->isPut()){
             return show(0,'请求不合法',[],400);
         }
-        $data = input('post.');
+
+        $data = input('put.');
+
+        //$data是加密后的,这里需要解密...
 
         //验证
         $validate = new Validate(['username'=>'require|max:32','password'=>'require|max:32','phone'=>'require|number|length:11']);
@@ -44,52 +48,48 @@ class User extends Common {
             return show(0,$validate->getError(),[],400);
         }
 
+        //用户名,电话不能有相同...
+        $res = model('User')->where('username',$data['username'])->whereOr('phone',$data['phone'])->find();
+
+        if($res){
+            return show(0,'用户名或者电话号码已存在',[],400);
+        }
+
+        //密码加密后保存...
+        $data['password'] = md5($data['password']);
+
         try {
 
             $res = model('User')->save($data, ['id' => $this->user->id]);
 
         } catch (Exception $e){
+
             Log::write($e->getMessage());
+            return show(0,'保存失败',[],500);
 
-        }
-
-        if(!$res){
-            return show(1,'保存失败',[],500);
         }
 
         return show(1,'保存成功',[],200);
     }
 
-    //用户登录验证
-    public function check(){
+    //退出
+    public function logout(){
 
-        if(!request()->isPost()) return show(0,'请求不正确',[],500);
+        //清空token,time_out
+        $data = [
+            'token' => '',
+            'time_out' => 0
+        ];
 
-        $data = input('post.');
+        try {
+            model('User')->save($data,['id'=>$this->user->id]);
+        } catch (Exception $e){
 
-        $validate = new Validate([
-            'username' => 'require',
-            'password' => 'require',
-        ]);
-
-        if(!$validate->check($data)){
-            return show(0, $validate->getError(),[],500);
+            throw new ApiException($e->getMessage());
         }
 
-        $user = model('User')->get(['username'=>$data['username']]);
-
-        if(!$user){
-            return show(0,'该用户不存在',[],500);
-        }
-
-        if($user->password != $data['password']){
-            return show(0,'密码不正确',[],500);
-        }
-
-        return show(0,'登录成功',[],200);
-
+        return show(1,'成功退出',[],200);
 
     }
-
 
 }

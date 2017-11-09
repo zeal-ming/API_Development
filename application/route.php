@@ -39,10 +39,11 @@ Route::post('sendMessage','api/test/sendMessage');
 Route::post('VerifyMessage','api/test/VerifyMessage');
 
 Route::resource('SendMes','api/SendMes');
-
 Route::post('sendVerify','api/SendMes/sendVerify');
 
+//login控制器
 Route::resource(':ver/login','api/:ver.login');
 
 //给user注册路由
 Route::resource(':ver/user','api/:ver.user');
+Route::put(':ver/user','api/:ver.user/update');

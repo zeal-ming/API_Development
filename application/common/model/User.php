@@ -12,4 +12,9 @@ use think\Model;
 
 class User extends Model{
 
+    //通过用户名或者电话查询
+    public function getUserByNameOrPhone($username, $phone){
+
+
+    }
 }

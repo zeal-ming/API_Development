@@ -13,16 +13,26 @@ use app\common\lib\ApiException;
 use think\Cache;
 use think\Controller;
 
+/*
+ * 授权访问的过这个控制器
+ */
 class Base extends Controller{
 
     public $header;
 
     public function _initialize()
     {
+
+        //获取请求头数据
+        $this->header = request()->header();
+
+//        throw new ApiException($header['token'],200);
 //        $this->testSign();
 //        dump(time());
-        //每次进来之前先验证签名
+
+//        每次进来之前先验证签名
 //        $this->checkAuthorize();
+//        $this->saveActiveUser();
     }
 
     /*
@@ -31,10 +41,6 @@ class Base extends Controller{
     public function checkAuthorize()
     {
 
-        //获取请求头数据
-        $header = request()->header();
-
-        $this->header = $header;
 
         //api文档规定 请求头必须带 app_type参数,并且值为iOS或Android
         //基础参数的校验
@@ -143,11 +149,9 @@ class Base extends Controller{
         $data = [
             'version' => $header['version'],
             'app_type' => $header['app_type'],
-            'did' => $header['did']
+            'did' => $header['did'],
         ];
 
-
          model('ActiveUser')->allowField(true)->save($data);
-
     }
 }
